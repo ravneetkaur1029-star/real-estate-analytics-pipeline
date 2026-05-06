@@ -1,0 +1,47 @@
+-- ============================================
+-- PROPERTY REVENUE ANALYSIS
+-- ============================================
+
+SELECT property_id,
+       SUM(amount) AS total_revenue,
+       AVG(days_late) AS avg_delay,
+       COUNT(payment_id) AS total_payments
+FROM real_estate.payments
+GROUP BY property_id
+ORDER BY total_revenue DESC;
+
+
+-- ============================================
+-- TENANT RISK ANALYSIS
+-- ============================================
+
+SELECT tenant_id,
+       AVG(days_late) AS avg_delay,
+       CASE 
+           WHEN AVG(days_late) > 10 THEN 'HIGH'
+           WHEN AVG(days_late) > 5 THEN 'MEDIUM'
+           ELSE 'LOW'
+       END AS risk_level
+FROM real_estate.payments
+GROUP BY tenant_id;
+
+
+-- ============================================
+-- PAYMENT CATEGORY DISTRIBUTION
+-- ============================================
+
+SELECT payment_category,
+       COUNT(*) AS total_count
+FROM real_estate.payments
+GROUP BY payment_category;
+
+
+-- ============================================
+-- LEASE EXPIRY ANALYSIS
+-- ============================================
+
+SELECT lease_id,
+       tenant_id,
+       days_to_expiry
+FROM real_estate.leases
+ORDER BY days_to_expiry ASC;
